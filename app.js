@@ -1,4 +1,5 @@
 /*-------------------------------- Constants --------------------------------*/
+//In a constant called winningCombos, define the eight possible winning combinations as an array of arrays.
 const winningCombos = [
 [0,1,2],
 [3,4,5],
@@ -84,15 +85,36 @@ const render = () => {
         } else messageEl.textContent = `${turn} wins!`;
     }     ;
 
-init();
-
-const handleClick(event) => {
 
 
+
+//Create a function named placePiece that accepts an index parameter.
+const placePiece = (index) => {
+    board[index] = turn;
+    console.log(board);
+};
+
+const handleClick = (event) => {
+
+//Obtain the index of the clicked square.
+const squareIndex = event.target.id
+
+// If the square is already taken or the game is over, return out of the function
+if (board[squareIndex] === 'X' || board[squareIndex] === 'O' || winner) {
+    return;
 }
+
+placePiece(squareIndex);
+
+render();
+
+};
 
 
 /*----------------------------- Event Listeners -----------------------------*/
+//Add an event listener to each of the existing squareEls with a loop. Set up the event listener to respond to the 'click' event.
+squareEls.forEach(square => {
+    square.addEventListener('click', handleClick);
+})
 
-
-
+init();
