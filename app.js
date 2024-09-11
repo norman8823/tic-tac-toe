@@ -12,6 +12,7 @@ const winningCombos = [
 ];
 
 
+
 /*---------------------------- Variables (state) ----------------------------*/
 // Use a variable named board to represent the state of the squares on the board.
 let board; 
@@ -31,6 +32,9 @@ const squareEls = document.querySelectorAll('.sqr')
 
 // In a constant called messageEl, store the element that displays the game’s status on the page.
 const messageEl = document.getElementById('message');
+
+// Cached Element Reference for the Reset Button
+const resetBtnEl = document.getElementById('reset');
 
 console.log(squareEls)
 console.log(message)
@@ -105,16 +109,62 @@ if (board[squareIndex] === 'X' || board[squareIndex] === 'O' || winner) {
 }
 
 placePiece(squareIndex);
-
+checkForWinner();
+checkForTie();
+switchPlayerTurn();
 render();
 
 };
 
+// Create a function called checkForWinner that checks each of the winning combinations 
+const checkForWinner = () => {
+    // Loop through each winning combination
+    winningCombos.forEach((combo) => {
+      const [a, b, c] = combo; // Destructure the combo to get indices
+      if (
+        board[a] !== '' &&       // The first position is not empty
+        board[a] === board[b] && // First and second positions are the same
+        board[a] === board[c]    // First and third positions are the same
+      ) {
+        winner = true; // Set winner to true
+      }
+    });
+  };
 
+//Create a function to check for Tie
+const checkForTie = () => {
+    // If there is a winner, no need to check for tie
+    if (winner) return;
+  
+    // If all board positions are filled (no '' left), it's a tie
+    if (!board.includes('')) {
+      tie = true;
+    } else {
+      tie = false;
+    }
+  
+    // For testing purposes
+    console.log('Tie:', tie);
+  };
+
+  //Create a function to switch player turns
+  const switchPlayerTurn = () => {
+    // If there is a winner, do not switch turns
+    if (winner) return;
+  
+    // Switch turns
+    turn = turn === 'X' ? 'O' : 'X';
+  
+    // For testing purposes
+    console.log('Turn:', turn);
+  };
 /*----------------------------- Event Listeners -----------------------------*/
 //Add an event listener to each of the existing squareEls with a loop. Set up the event listener to respond to the 'click' event.
 squareEls.forEach(square => {
     square.addEventListener('click', handleClick);
 })
+
+// Add event listener to the reset button
+resetBtnEl.addEventListener('click', init);
 
 init();
